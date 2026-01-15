@@ -1,9 +1,22 @@
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 build
 .svelte-kit
 .vite
+
+# Environment
 .env
 .env.*
+
+# OS
 .DS_Store
+
+# Testing
 coverage
+
+# IDE
+.vscode
+.idea
