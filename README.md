@@ -35,6 +35,7 @@ This project uses a Kanban board workflow for managing development tasks.
 
 - **Setup Guide**: [.github/PROJECT_BOARD_CONFIG.md](.github/PROJECT_BOARD_CONFIG.md)
 - **Workflow Guide**: [.github/KANBAN_WORKFLOW_GUIDE.md](.github/KANBAN_WORKFLOW_GUIDE.md)
+- **Visual Reference**: [.github/KANBAN_VISUAL_REFERENCE.md](.github/KANBAN_VISUAL_REFERENCE.md)
 - **Configuration**: [.github/kanban-board-config.json](.github/kanban-board-config.json)
 
 To set up the project board, see the setup instructions in [PROJECT_BOARD_CONFIG.md](.github/PROJECT_BOARD_CONFIG.md) or run:
