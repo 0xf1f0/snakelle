@@ -17,3 +17,11 @@ export const THEME = {
   SNAKE_COLOR: '#4CAF50',
   TARGET_COLOR: '#FF5722',
 } as const;
+
+/**
+ * UI text constants
+ */
+export const UI_TEXT = {
+  MVP_PLACEHOLDER: 'snakelle — MVP scaffold',
+  TAGLINE: 'A daily one-shot puzzle game inspired by Snake',
+} as const;

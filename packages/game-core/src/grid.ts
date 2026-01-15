@@ -1,4 +1,4 @@
-import type { Grid, Position } from '@snakelle/shared';
+import type { Grid, Position, Direction } from '@snakelle/shared';
 import { GAME_CONFIG } from '@snakelle/shared';
 
 /**
@@ -24,7 +24,7 @@ export function isValidPosition(pos: Position): boolean {
  */
 export function getNextPosition(
   current: Position,
-  direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
+  direction: Direction
 ): Position {
   switch (direction) {
     case 'UP':

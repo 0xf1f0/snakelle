@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { GAME_CONFIG, THEME } from '@snakelle/shared';
+  import { GAME_CONFIG, THEME, UI_TEXT } from '@snakelle/shared';
 
   let canvas: HTMLCanvasElement;
 
@@ -46,14 +46,14 @@
     ctx.font = '20px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('snakelle — MVP scaffold', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+    ctx.fillText(UI_TEXT.MVP_PLACEHOLDER, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
   });
 </script>
 
 <main>
   <h1>snakelle</h1>
   <canvas bind:this={canvas}></canvas>
-  <p>A daily one-shot puzzle game inspired by Snake</p>
+  <p>{UI_TEXT.TAGLINE}</p>
 </main>
 
 <style>
