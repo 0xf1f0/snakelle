@@ -42,13 +42,12 @@ jobs:
             const wipCount = issues.length;
             
             console.log(`Current WIP count: ${wipCount} (limit: ${MAX_WIP})`);
-            
             if (wipCount > MAX_WIP) {
               console.log(`⚠️ WIP limit exceeded! ${wipCount} issues in progress.`);
               
               // Create a warning comment on the most recently moved issue
               const message = `## ⚠️ Solo Developer Rule Violation
-              
+
 **Work In Progress Limit Exceeded**
 
 Currently **${wipCount} issues** are marked as "In Progress", which exceeds the limit of **${MAX_WIP} issues**.

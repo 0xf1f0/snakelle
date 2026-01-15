@@ -3,7 +3,7 @@
 # GitHub Project Board Setup Script
 # This script helps set up labels and provides instructions for the Kanban board
 
-set -e
+set -euo pipefail
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Snakelle Kanban Board Setup"
@@ -64,7 +64,14 @@ echo "GitHub Projects (v2) must be set up manually through the web interface."
 echo ""
 echo "Follow these steps:"
 echo ""
-echo "1. 🌐 Go to: https://github.com/$(gh repo view --json owner,name -q '.owner.login + "/" + .name')/projects"
+
+# Get repository URL with error handling
+REPO_URL="https://github.com/0xf1f0/snakelle"
+if command -v gh &> /dev/null && gh auth status &> /dev/null; then
+    REPO_URL="https://github.com/$(gh repo view --json owner,name -q '.owner.login + "/" + .name' 2>/dev/null || echo '0xf1f0/snakelle')"
+fi
+
+echo "1. 🌐 Go to: ${REPO_URL}/projects"
 echo ""
 echo "2. ➕ Click 'New project'"
 echo ""
