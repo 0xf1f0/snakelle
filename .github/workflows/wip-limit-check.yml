@@ -1,0 +1,112 @@
+name: WIP Limit Check
+
+# This workflow checks the Work In Progress (WIP) limit for the "In Progress" column
+# According to the Solo Developer Rule, no more than 2 issues should be in progress at once
+
+on:
+  issues:
+    types: [opened, reopened, labeled]
+  project_card:
+    types: [moved, created]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check-wip-limit:
+    runs-on: ubuntu-latest
+    name: Check Solo Developer WIP Limit
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check WIP limit
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Configuration
+            const MAX_WIP = 2;
+            const WIP_LABEL = 'in-progress';
+            const WARNING_LABEL = 'wip-limit-exceeded';
+            
+            // Get all open issues with the in-progress label
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: WIP_LABEL
+            });
+            
+            const wipCount = issues.length;
+            
+            console.log(`Current WIP count: ${wipCount} (limit: ${MAX_WIP})`);
+            
+            if (wipCount > MAX_WIP) {
+              console.log(`⚠️ WIP limit exceeded! ${wipCount} issues in progress.`);
+              
+              // Create a warning comment on the most recently moved issue
+              const message = `## ⚠️ Solo Developer Rule Violation
+              
+**Work In Progress Limit Exceeded**
+
+Currently **${wipCount} issues** are marked as "In Progress", which exceeds the limit of **${MAX_WIP} issues**.
+
+### Why this matters:
+- Reduces context-switching overhead
+- Maintains focus on completing work  
+- Prevents work-in-progress buildup
+- Ensures steady flow of completed work
+
+### Action Required:
+1. ⏸️ Stop picking up new work
+2. 🎯 Focus on completing existing in-progress items
+3. ✅ Move items to "Review / Verify" as soon as possible
+4. 🔄 Only pick up new work when the count drops to 1 or 0
+
+### Current In-Progress Issues:
+${issues.map(issue => `- #${issue.number}: ${issue.title}`).join('\n')}
+
+---
+*This is an automated reminder based on the Solo Developer Rule defined in [PROJECT_BOARD_CONFIG.md](.github/PROJECT_BOARD_CONFIG.md)*`;
+              
+              // Post comment on the triggering issue if available
+              if (context.issue && context.issue.number) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: message
+                });
+                
+                // Add warning label
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  labels: [WARNING_LABEL]
+                });
+              }
+              
+              // Set workflow status to warning (non-blocking)
+              core.warning(`WIP limit exceeded: ${wipCount}/${MAX_WIP} issues in progress`);
+              
+            } else {
+              console.log(`✅ WIP limit respected: ${wipCount}/${MAX_WIP} issues in progress`);
+              
+              // Remove warning labels from all in-progress issues if limit is now respected
+              for (const issue of issues) {
+                const labels = issue.labels.map(l => l.name);
+                if (labels.includes(WARNING_LABEL)) {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    name: WARNING_LABEL
+                  }).catch(() => {
+                    // Label might not exist, ignore error
+                  });
+                }
+              }
+            }

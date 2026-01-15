@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Snakelle MVP Kanban Board",
+  "description": "Configuration for the Kanban board workflow used in the Snakelle project",
+  "version": "1.0.0",
+  "workflow": {
+    "name": "Snakelle MVP Development",
+    "type": "kanban",
+    "defaultView": "board",
+    "columns": [
+      {
+        "id": "backlog",
+        "name": "Backlog",
+        "description": "Everything not yet ready to work",
+        "order": 1,
+        "purpose": "All cards/issues that are not yet ready to work on",
+        "criteria": [
+          "Issues that need more research or definition",
+          "Ideas and feature requests",
+          "Low-priority items",
+          "Dependencies not yet resolved"
+        ],
+        "color": "#gray",
+        "limits": {
+          "min": null,
+          "max": null
+        }
+      },
+      {
+        "id": "ready",
+        "name": "Ready",
+        "description": "Well-defined, unblocked, next up",
+        "order": 2,
+        "purpose": "Issues that are well-defined, unblocked, and ready to be picked up next",
+        "criteria": [
+          "Acceptance criteria clearly defined",
+          "No blockers or dependencies",
+          "Fully specified and ready to implement",
+          "Prioritized and ready for work"
+        ],
+        "color": "#blue",
+        "limits": {
+          "min": null,
+          "max": null
+        }
+      },
+      {
+        "id": "in-progress",
+        "name": "In Progress",
+        "description": "Max 1–2 issues at a time (solo dev rule)",
+        "order": 3,
+        "purpose": "Active work items",
+        "criteria": [
+          "Currently being worked on",
+          "Pull request may be open",
+          "Active development happening"
+        ],
+        "color": "#yellow",
+        "limits": {
+          "min": null,
+          "max": 2,
+          "rule": "solo-developer-wip-limit",
+          "enforcement": "warning",
+          "rationale": "Prevent context-switching and maintain focus"
+        },
+        "warnings": {
+          "maxExceeded": "⚠️ Solo Developer Rule violated: More than 2 issues in progress. Please focus on completing existing work before starting new tasks."
+        }
+      },
+      {
+        "id": "review-verify",
+        "name": "Review / Verify",
+        "description": "Manual testing, acceptance criteria check",
+        "order": 4,
+        "purpose": "For manual testing and acceptance criteria verification",
+        "criteria": [
+          "Code review in progress",
+          "Testing against acceptance criteria",
+          "Manual verification needed",
+          "Waiting for feedback or approval"
+        ],
+        "color": "#purple",
+        "limits": {
+          "min": null,
+          "max": null
+        }
+      },
+      {
+        "id": "done",
+        "name": "Done",
+        "description": "Meets AC, merged, deployed if applicable",
+        "order": 5,
+        "purpose": "Completed and deployed work",
+        "criteria": [
+          "Acceptance criteria met",
+          "Code merged to main branch",
+          "Deployed to production (if applicable)",
+          "No further action required"
+        ],
+        "color": "#green",
+        "limits": {
+          "min": null,
+          "max": null
+        },
+        "autoClose": true
+      }
+    ],
+    "transitions": [
+      {
+        "from": "backlog",
+        "to": "ready",
+        "conditions": [
+          "Issue is fully defined with clear acceptance criteria",
+          "All dependencies are resolved or available",
+          "Issue is prioritized and ready to be worked"
+        ]
+      },
+      {
+        "from": "ready",
+        "to": "in-progress",
+        "conditions": [
+          "Developer picks up the issue to work on",
+          "Check: Ensure no more than 2 issues are already in progress",
+          "Work begins (branch created, coding started)"
+        ]
+      },
+      {
+        "from": "in-progress",
+        "to": "review-verify",
+        "conditions": [
+          "Code changes are complete",
+          "Pull request opened",
+          "Ready for review and testing"
+        ]
+      },
+      {
+        "from": "review-verify",
+        "to": "in-progress",
+        "conditions": [
+          "Changes requested during review",
+          "Issues found during testing",
+          "Needs additional work"
+        ]
+      },
+      {
+        "from": "review-verify",
+        "to": "done",
+        "conditions": [
+          "All acceptance criteria verified",
+          "Code reviewed and approved",
+          "Merged to main branch",
+          "Deployed (if applicable)"
+        ]
+      }
+    ],
+    "rules": {
+      "solo-developer-wip-limit": {
+        "description": "Limit work in progress to prevent context-switching",
+        "column": "in-progress",
+        "maxItems": 2,
+        "enforcement": "warning",
+        "actions": [
+          "Stop picking up new work",
+          "Focus on completing existing in-progress items",
+          "Move items to Review/Verify as soon as possible",
+          "Only pick up new work when count drops to 1 or 0"
+        ]
+      }
+    },
+    "automations": [
+      {
+        "name": "auto-add-to-backlog",
+        "trigger": "issue.created",
+        "action": "add-to-column",
+        "target": "backlog",
+        "enabled": true
+      },
+      {
+        "name": "wip-limit-check",
+        "trigger": "column.item-added",
+        "column": "in-progress",
+        "action": "check-limit",
+        "enabled": true
+      },
+      {
+        "name": "auto-close-done",
+        "trigger": "column.item-added",
+        "column": "done",
+        "action": "close-issue",
+        "enabled": false
+      }
+    ]
+  }
+}
