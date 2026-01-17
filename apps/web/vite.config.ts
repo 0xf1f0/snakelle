@@ -7,7 +7,9 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     watch: {
-      usePolling: true,
+      // Enable polling only when explicitly requested via environment variable
+      // Polling impacts performance but may be needed for Docker on some systems
+      usePolling: process.env.VITE_USE_POLLING === 'true',
     },
   },
 });

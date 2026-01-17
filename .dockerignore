@@ -31,6 +31,5 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 
-# Documentation
-*.md
-!README.md
+# Documentation (include README.md and other docs might be needed)
+DOCKER_NOTES.md

@@ -50,9 +50,6 @@
     }
   },
 
-  // Use 'postCreateCommand' to run commands after the container is created
-  "postCreateCommand": "pnpm install",
-
   // Use 'postStartCommand' to run commands after the container starts
   "postStartCommand": "echo 'Dev container is ready! Run: pnpm run dev'",
 

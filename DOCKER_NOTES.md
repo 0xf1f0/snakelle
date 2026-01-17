@@ -17,11 +17,13 @@ This file tracks changes and decisions made during the Docker container setup fo
    - Mounts source code as volumes for hot reload
    - Preserves node_modules in container (not overwritten by host)
    - Maps port 5173 to localhost
+   - **Updated**: Removed deprecated version field, added VITE_USE_POLLING environment variable
 
 3. **.dockerignore**
    - Excludes unnecessary files from Docker context
    - Reduces build time and image size
    - Excludes node_modules, build outputs, git files, IDE configs
+   - **Updated**: More specific about markdown exclusions (only DOCKER_NOTES.md)
 
 4. **.devcontainer/devcontainer.json**
    - VS Code Dev Container configuration
@@ -29,6 +31,7 @@ This file tracks changes and decisions made during the Docker container setup fo
    - Configures format on save
    - Enforces LF line endings in editor
    - Runs as 'node' user (non-root)
+   - **Updated**: Removed redundant `postCreateCommand` (dependencies already installed in Dockerfile)
 
 5. **.editorconfig**
    - Cross-editor configuration for consistent formatting

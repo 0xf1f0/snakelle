@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   dev:
     build:
@@ -22,6 +20,8 @@ services:
       - "5173:5173"
     environment:
       - NODE_ENV=development
+      # Set to 'true' if you need file watching via polling (slower but more compatible)
+      - VITE_USE_POLLING=false
     command: pnpm run dev
     stdin_open: true
     tty: true
