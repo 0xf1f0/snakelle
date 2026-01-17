@@ -41,7 +41,6 @@
       "name": "Debug Tests (game-core)",
       "type": "node",
       "request": "launch",
-      "name": "Debug Vitest Tests",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--filter",
