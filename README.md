@@ -72,6 +72,40 @@ pnpm run format       # Format code with Prettier
 pnpm run test         # Run unit tests in packages/game-core
 ```
 
+### VS Code Development (Windows)
+
+The repository includes VS Code configuration for seamless development and debugging on Windows:
+
+**Recommended Extensions:**
+- Svelte for VS Code - Svelte language support
+- ESLint - JavaScript/TypeScript linting
+- Prettier - Code formatting
+- Vitest Explorer - Test exploration and debugging
+
+**Debugging Configurations:**
+1. **Debug Web App (Chrome)** - Launch Chrome with debugger attached
+2. **Debug Web App (Edge)** - Launch Edge with debugger attached (native on Windows)
+3. **Attach to Web App** - Attach to running browser instance
+4. **Debug Tests (game-core)** - Debug Vitest tests in watch mode
+5. **Debug Current Test File** - Debug the currently open test file
+
+**Tasks:**
+- Press `Ctrl+Shift+B` to run the default build task
+- Press `Ctrl+Shift+P` and type "Run Task" to see all available tasks:
+  - Install dependencies
+  - Build project
+  - Run tests
+  - Lint code
+  - Type check
+  - Format code
+
+**Getting Started:**
+1. Open the project in VS Code
+2. Install recommended extensions when prompted
+3. Press `F5` to start debugging the web app (or use the Run and Debug panel)
+4. Set breakpoints in your TypeScript/Svelte files
+5. Debug and step through code execution
+
 ## Deployment
 
 ### Cloudflare Pages
