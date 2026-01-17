@@ -3,6 +3,7 @@
   import { GAME_CONFIG, THEME, UI_TEXT } from '@snakelle/shared';
 
   let canvas: HTMLCanvasElement;
+  let currentYear = new Date().getFullYear();
 
   onMount(() => {
     const ctx = canvas.getContext('2d');
@@ -54,6 +55,9 @@
   <h1>snakelle</h1>
   <canvas bind:this={canvas}></canvas>
   <p>{UI_TEXT.TAGLINE}</p>
+  <footer>
+    <p>&copy; {currentYear} snakelle. Developer: Ola O.</p>
+  </footer>
 </main>
 
 <style>
@@ -80,6 +84,18 @@
 
   p {
     color: #666;
+    margin: 0;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #999;
+  }
+
+  footer p {
     margin: 0;
   }
 </style>
