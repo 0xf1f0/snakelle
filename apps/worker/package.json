@@ -1,0 +1,10 @@
+{
+  "name": "@snakelle/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "echo 'Worker placeholder - no linting yet'",
+    "type-check": "echo 'Worker placeholder - no type checking yet'"
+  }
+}
