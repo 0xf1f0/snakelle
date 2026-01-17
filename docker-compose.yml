@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mount source code for hot reload
+      - ./apps:/app/apps
+      - ./packages:/app/packages
+      - ./tsconfig.base.json:/app/tsconfig.base.json
+      - ./.eslintrc.json:/app/.eslintrc.json
+      - ./.prettierrc.json:/app/.prettierrc.json
+      - ./.editorconfig:/app/.editorconfig
+      # Prevent node_modules from being overwritten
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/packages/game-core/node_modules
+      - /app/packages/shared/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    command: pnpm run dev
+    stdin_open: true
+    tty: true

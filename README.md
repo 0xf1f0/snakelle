@@ -37,12 +37,55 @@ This is a production-quality monorepo optimized for solo developer iteration.
 
 ## Local Development
 
-### Prerequisites
+You can develop locally either with Docker (recommended for cross-platform consistency) or with a native Node.js setup.
 
+### Option 1: Docker Development (Recommended)
+
+**Prerequisites:**
+- Docker Desktop (or Docker Engine + Docker Compose)
+- VS Code (optional, for Dev Container support)
+
+**Quick Start with Docker Compose:**
+
+```bash
+# Build and start the development container
+docker-compose up
+
+# Or run in detached mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+The dev server will be available at `http://localhost:5173`
+
+**VS Code Dev Container:**
+
+For the best development experience with VS Code:
+
+1. Install the "Dev Containers" extension
+2. Open the project in VS Code
+3. Press `F1` and select "Dev Containers: Reopen in Container"
+4. VS Code will build the container and set up the environment
+5. Run `pnpm run dev` in the integrated terminal
+
+The Dev Container includes:
+- Pre-configured TypeScript, Svelte, ESLint, and Prettier extensions
+- Format on save enabled
+- LF line endings enforced
+- All dependencies pre-installed
+
+### Option 2: Native Node.js Setup
+
+**Prerequisites:**
 - Node.js 20+ LTS
 - pnpm 9.0.0 (installed automatically via packageManager field)
 
-### Setup
+**Setup:**
 
 ```bash
 # Install dependencies
