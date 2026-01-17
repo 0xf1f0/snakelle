@@ -8,16 +8,10 @@
       "args": ["run", "dev"],
       "isBackground": true,
       "problemMatcher": {
-        "pattern": {
-          "regexp": "^([^\\s].*)$",
-          "file": 1,
-          "location": 2,
-          "message": 3
-        },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".*VITE.*",
-          "endsPattern": ".*(Local|ready in).*"
+          "beginsPattern": "vite dev",
+          "endsPattern": "Local:.*http://localhost"
         }
       },
       "presentation": {
