@@ -70,6 +70,8 @@ This file tracks changes and decisions made during the Docker container setup fo
 
 ### Testing Required
 
+**Note**: Docker build was tested in the development environment but encountered a network restriction when downloading pnpm during the build process. This is expected in sandboxed environments and should work fine in normal development environments with internet access.
+
 Before merging, please verify:
 
 1. **Docker Build**

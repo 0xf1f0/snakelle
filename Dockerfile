@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
-COPY apps/worker/package.json ./apps/worker/ 2>/dev/null || :
+COPY apps/worker/package.json ./apps/worker/
 COPY packages/game-core/package.json ./packages/game-core/
 COPY packages/shared/package.json ./packages/shared/
 
