@@ -3,7 +3,7 @@
   import { GAME_CONFIG, THEME, UI_TEXT } from '@snakelle/shared';
 
   let canvas: HTMLCanvasElement;
-  let currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
   onMount(() => {
     const ctx = canvas.getContext('2d');
@@ -90,6 +90,8 @@
   footer {
     position: absolute;
     bottom: 1rem;
+    left: 0;
+    right: 0;
     text-align: center;
     font-size: 0.875rem;
     color: #999;
