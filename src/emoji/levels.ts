@@ -71,9 +71,9 @@ export const LEVELS: Level[] = [
 ];
 
 /**
- * Gets a level by index (1-based for user display)
- * @param levelNumber - 1-based level number
- * @returns The Level or undefined if not found
+ * Gets a level by its 1-based level number
+ * @param levelNumber - 1-based level number (e.g., 1 for the first level)
+ * @returns The Level or undefined if the level number is out of range
  */
 export function getLevel(levelNumber: number): Level | undefined {
   return LEVELS[levelNumber - 1];
