@@ -45,7 +45,7 @@ jobs:
             echo "  ✗ feature/1-Init-App (not lowercase)"
             echo "  ✗ feature/1-this-is-too-many-words (too many words)"
             echo ""
-            echo "See .github/copilot-instructions.md for details."
+            echo "See /.github/copilot-instructions.md for details."
             exit 1
           fi
           
@@ -55,7 +55,7 @@ jobs:
           
           if [ "$WORD_COUNT" -lt 2 ] || [ "$WORD_COUNT" -gt 4 ]; then
             echo "::error::Branch description '$DESC' must have 2-4 words, found $WORD_COUNT"
-            echo "See .github/copilot-instructions.md for details."
+            echo "See /.github/copilot-instructions.md for details."
             exit 1
           fi
           
