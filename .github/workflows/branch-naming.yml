@@ -1,0 +1,54 @@
+name: Branch Naming Convention
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Checking branch name: $BRANCH_NAME"
+          
+          # Check if branch name matches the pattern: feature/<number>-<2-4-words>
+          if [[ ! "$BRANCH_NAME" =~ ^feature/[0-9]+-[a-z]+(-[a-z]+){1,3}$ ]]; then
+            echo "::error::Branch name '$BRANCH_NAME' does not follow the required convention."
+            echo ""
+            echo "Required format: feature/<issue-number>-<short-description>"
+            echo ""
+            echo "Rules:"
+            echo "  - Use 'feature/' prefix"
+            echo "  - Include the issue number after the prefix"
+            echo "  - Add a hyphen followed by a short description"
+            echo "  - Short description must be:"
+            echo "    * lowercase"
+            echo "    * hyphen-separated"
+            echo "    * 2-4 words only"
+            echo ""
+            echo "Examples:"
+            echo "  ✓ feature/1-init-vite-ts"
+            echo "  ✓ feature/48-game-loop-canvas"
+            echo "  ✓ feature/50-emoji-mask"
+            echo "  ✗ copilot/create-basic-app-shell (wrong prefix)"
+            echo "  ✗ feature/init-app (missing issue number)"
+            echo "  ✗ feature/1-Init-App (not lowercase)"
+            echo "  ✗ feature/1-this-is-too-many-words (too many words)"
+            echo ""
+            echo "See .github/copilot-instructions.md for details."
+            exit 1
+          fi
+          
+          # Extract and validate the short description part
+          DESC=$(echo "$BRANCH_NAME" | sed 's/^feature\/[0-9]\+-//')
+          WORD_COUNT=$(echo "$DESC" | tr '-' '\n' | wc -l)
+          
+          if [ "$WORD_COUNT" -lt 2 ] || [ "$WORD_COUNT" -gt 4 ]; then
+            echo "::error::Branch description '$DESC' must have 2-4 words, found $WORD_COUNT"
+            echo "See .github/copilot-instructions.md for details."
+            exit 1
+          fi
+          
+          echo "✓ Branch name is valid!"
