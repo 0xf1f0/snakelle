@@ -2,6 +2,43 @@
 
 Snakelle is a web-based emoji snake game built with Vite and TypeScript. Follow these guidelines when contributing to the project.
 
+## ⚠️ CRITICAL: Branch Naming Convention (MUST FOLLOW)
+
+**IMPORTANT:** When you are assigned to work on an issue, you **MUST** use the existing branch that was created for that issue. **DO NOT create a new branch.**
+
+If you need to create a branch, it **MUST** follow this exact naming convention:
+
+```
+feature/<issue-number>-<short-description>
+```
+
+### Mandatory Rules:
+1. **Prefix:** MUST be `feature/`
+2. **Issue number:** MUST include the GitHub issue number after the prefix
+3. **Separator:** MUST use a hyphen after the issue number
+4. **Description:** MUST be:
+   - **lowercase only** (no capitals anywhere)
+   - **hyphen-separated** (use `-` between words)
+   - **2-5 words only** (not 1, not 6+)
+
+### ✅ Valid Examples:
+- `feature/1-init-vite-ts`
+- `feature/48-game-loop-canvas`
+- `feature/50-emoji-mask`
+- `feature/60-setup-copilot-instructions`
+
+### ❌ Invalid Examples (will fail CI):
+- `copilot/create-basic-app-shell` ❌ Wrong prefix
+- `feature/init-app` ❌ Missing issue number
+- `feature/1-Init-App` ❌ Not lowercase
+- `feature/1-this-is-way-too-many-words` ❌ Too many words
+- `feature/1-app` ❌ Only 1 word
+
+### Automated Enforcement
+Branch naming is **automatically validated** by GitHub Actions. Pull requests with non-compliant branch names **will fail CI checks** until the branch is renamed.
+
+**⚠️ ALWAYS check the current branch before starting work:** Run `git branch --show-current` to verify you're on the correct branch.
+
 ## Project Overview
 
 **Tech Stack:**
@@ -114,32 +151,6 @@ Copilot works well on these types of tasks:
 - Introducing new external dependencies
 - Production-critical changes without thorough testing
 - Tasks requiring deep understanding of game design decisions
-
-## Branch Naming Convention
-
-When creating branches for issues, **always** follow this naming convention:
-
-```
-feature/<issue-number>-<short-description>
-```
-
-### Rules for branch names:
-- Use the `feature/` prefix
-- Include the issue number after the prefix
-- Add a hyphen followed by a short description
-- The short description must be:
-  - **lowercase**
-  - **hyphen-separated**
-  - **2-4 words only**
-
-### Examples:
-- `feature/1-init-vite-ts` for issue #1 "Initialize Snakelle frontend project (Vite + TypeScript)"
-- `feature/48-game-loop-canvas` for issue #48 "Implement core game loop and Canvas renderer for rectangular grid"
-- `feature/50-emoji-mask` for issue #50 "Implement emoji → mask conversion and EmojiMetadata"
-
-### Automated Enforcement
-
-Branch naming is automatically validated by the GitHub Actions workflow (`.github/workflows/branch-naming.yml`). Pull requests with non-compliant branch names will fail the check until the branch is renamed.
 
 ## Guidelines for Issues
 
