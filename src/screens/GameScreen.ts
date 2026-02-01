@@ -21,10 +21,29 @@ export function createGameScreen(level?: number): HTMLElement {
   const renderer = createBoardRenderer();
   const canvas = renderer.getCanvas();
 
+  // Restart function
+  function restartGame(): void {
+    gameState = createGameState();
+    // Restart game loop with fresh state
+    if (!gameLoop.isRunning()) {
+      gameLoop.start();
+    }
+  }
+
   // Create keyboard handler
   const keyboardHandler = createKeyboardHandler((direction) => {
     changeDirection(gameState, direction);
   });
+
+  // Add restart key handler
+  function handleRestartKey(event: KeyboardEvent): void {
+    if (event.key === 'r' || event.key === 'R') {
+      if (gameState.status === 'lost') {
+        event.preventDefault();
+        restartGame();
+      }
+    }
+  }
 
   // Create game loop
   const gameLoop = createGameLoop({
@@ -37,6 +56,16 @@ export function createGameScreen(level?: number): HTMLElement {
       const visitedCountElement = container.querySelector('#visited-count') as HTMLElement;
       if (visitedCountElement) {
         visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${gameState.level.width * gameState.level.height}`;
+      }
+      
+      // Show game over message if lost
+      const gameOverElement = container.querySelector('#game-over-message') as HTMLElement;
+      if (gameOverElement) {
+        if (gameState.status === 'lost') {
+          gameOverElement.style.display = 'block';
+        } else {
+          gameOverElement.style.display = 'none';
+        }
       }
     }
   });
@@ -57,8 +86,14 @@ export function createGameScreen(level?: number): HTMLElement {
 
   // Add canvas to container
   const canvasContainer = container.querySelector('#canvas-container') as HTMLElement;
-  canvasContainer.innerHTML = '';
   canvasContainer.appendChild(canvas);
+  
+  // Add game over message overlay
+  const gameOverMessage = document.createElement('div');
+  gameOverMessage.id = 'game-over-message';
+  gameOverMessage.className = 'game-over-overlay';
+  gameOverMessage.innerHTML = '<h2>Game Over!</h2><p>Press R to Restart</p>';
+  canvasContainer.appendChild(gameOverMessage);
 
   // Set canvas size to maintain square aspect ratio
   function resizeCanvas(): void {
@@ -104,11 +139,13 @@ export function createGameScreen(level?: number): HTMLElement {
     gameLoop.stop();
     keyboardHandler.disable();
     window.removeEventListener('resize', resizeCanvas);
+    window.removeEventListener('keydown', handleRestartKey);
     appState.setScreen('levelSelect');
   });
 
   // Start the game
   keyboardHandler.enable();
+  window.addEventListener('keydown', handleRestartKey);
   gameLoop.start();
 
   return container;

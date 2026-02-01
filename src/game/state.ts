@@ -68,7 +68,7 @@ export function createGameState(
   width: number = DEFAULT_BOARD_WIDTH,
   height: number = DEFAULT_BOARD_HEIGHT
 ): GameState {
-  // Start the snake at the center of the board
+  // Start the snake at the center of the board with length 5 for easier self-collision testing
   const startX = Math.floor(width / 2);
   const startY = Math.floor(height / 2);
 
@@ -77,8 +77,23 @@ export function createGameState(
     Array.from({ length: width }, () => false)
   );
   
-  // Mark starting position as visited
-  visited[startY][startX] = true;
+  // Create initial snake segments (length 5, heading right)
+  const initialSegments = [
+    { x: startX, y: startY },      // head
+    { x: startX - 1, y: startY },  // body
+    { x: startX - 2, y: startY },  // body
+    { x: startX - 3, y: startY },  // body
+    { x: startX - 4, y: startY },  // tail
+  ];
+  
+  // Mark all starting positions as visited
+  let visitedCount = 0;
+  for (const segment of initialSegments) {
+    if (!visited[segment.y][segment.x]) {
+      visited[segment.y][segment.x] = true;
+      visitedCount++;
+    }
+  }
 
   return {
     level: {
@@ -86,11 +101,11 @@ export function createGameState(
       height,
     },
     snake: {
-      segments: [{ x: startX, y: startY }],
+      segments: initialSegments,
       direction: 'right',
     },
     visited,
-    visitedCount: 1,
+    visitedCount,
     status: 'playing',
     lastTickTime: 0,
   };
