@@ -44,11 +44,9 @@ export function updateGameState(state: GameState): void {
     state.visitedCount++;
   }
 
-  // For now, keep the snake at length 1 by removing the tail
-  // (In future, we might grow the snake based on game mechanics)
-  if (state.snake.segments.length > 1) {
-    state.snake.segments.pop();
-  }
+  // Keep the snake at constant length by removing the tail
+  // (In future, we might grow the snake based on game mechanics like eating food)
+  state.snake.segments.pop();
 }
 
 /**
