@@ -223,8 +223,11 @@ body {
 
 /* Mask Debug Screen */
 .mask-debug-screen {
-  background-color: #1a1a1a;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #1a1a1a;
   padding: 1em;
   overflow-y: auto;
   max-height: 100vh;

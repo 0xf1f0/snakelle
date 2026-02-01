@@ -67,6 +67,11 @@ export function createMaskDebugScreen(): HTMLElement {
    * Renders the mask grid as HTML
    */
   function renderMaskGrid(mask: EmojiMask): string {
+    const height = mask.length;
+    const width = height > 0 ? (mask[0]?.length ?? 0) : 0;
+    const filledCount = countMaskCells(mask);
+    const ariaLabel = `Emoji mask grid, ${height} rows by ${width} columns, ${filledCount} filled cells. Filled cells are shown as colored squares; empty cells are blank.`;
+    
     const rows = mask.map((row, y) => {
       const cells = row.map((cell, x) => {
         const cellClass = cell ? 'mask-cell filled' : 'mask-cell empty';
@@ -75,7 +80,7 @@ export function createMaskDebugScreen(): HTMLElement {
       return `<div class="mask-row">${cells}</div>`;
     }).join('');
     
-    return `<div class="mask-grid">${rows}</div>`;
+    return `<div class="mask-grid" role="img" aria-label="${ariaLabel}">${rows}</div>`;
   }
 
   /**

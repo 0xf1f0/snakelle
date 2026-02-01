@@ -51,16 +51,29 @@ const ALPHA_THRESHOLD = 128; // Alpha value threshold to consider a pixel as "fi
  */
 const CELL_FILL_THRESHOLD = 0.3;
 
+// Validation bounds for canvas and grid dimensions
+const MIN_CANVAS_SIZE = 16;
+const MAX_CANVAS_SIZE = 2048;
+const MIN_GRID_SIZE = 1;
+const MAX_GRID_SIZE = 256;
+
 /**
  * Renders an emoji to an offscreen canvas and returns the ImageData
  * @param emoji - The emoji character to render
- * @param size - The canvas size (default: 256)
+ * @param size - The canvas size (default: 256, must be between 16 and 2048)
  * @returns ImageData of the rendered emoji
+ * @throws Error if size is invalid or canvas context cannot be obtained
  */
 export function renderEmojiToCanvas(emoji: string, size: number = DEFAULT_CANVAS_SIZE): ImageData {
+  // Validate canvas size
+  if (!Number.isFinite(size) || size < MIN_CANVAS_SIZE || size > MAX_CANVAS_SIZE) {
+    throw new Error(`Canvas size must be between ${MIN_CANVAS_SIZE} and ${MAX_CANVAS_SIZE}, got: ${size}`);
+  }
+  
+  const validSize = Math.floor(size);
   const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
+  canvas.width = validSize;
+  canvas.height = validSize;
   
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -68,28 +81,29 @@ export function renderEmojiToCanvas(emoji: string, size: number = DEFAULT_CANVAS
   }
 
   // Clear canvas with transparent background
-  ctx.clearRect(0, 0, size, size);
+  ctx.clearRect(0, 0, validSize, validSize);
   
   // Set up text rendering for emoji
   // Use a large font size relative to canvas to get good detail
-  const fontSize = size * 0.8;
+  const fontSize = validSize * 0.8;
   ctx.font = `${fontSize}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
   // Draw the emoji centered on the canvas
-  ctx.fillText(emoji, size / 2, size / 2);
+  ctx.fillText(emoji, validSize / 2, validSize / 2);
   
-  return ctx.getImageData(0, 0, size, size);
+  return ctx.getImageData(0, 0, validSize, validSize);
 }
 
 /**
  * Samples ImageData and downscales to a boolean mask grid
  * @param imageData - The source ImageData from a rendered emoji
- * @param gridWidth - Target grid width
- * @param gridHeight - Target grid height
+ * @param gridWidth - Target grid width (must be between 1 and 256)
+ * @param gridHeight - Target grid height (must be between 1 and 256)
  * @param threshold - Alpha threshold (0-255) to consider a pixel as filled
  * @returns A boolean 2D array (EmojiMask)
+ * @throws Error if grid dimensions are invalid
  */
 export function sampleToMask(
   imageData: ImageData,
@@ -97,16 +111,26 @@ export function sampleToMask(
   gridHeight: number,
   threshold: number = ALPHA_THRESHOLD
 ): EmojiMask {
+  // Validate grid dimensions
+  if (!Number.isFinite(gridWidth) || gridWidth < MIN_GRID_SIZE || gridWidth > MAX_GRID_SIZE) {
+    throw new Error(`Grid width must be between ${MIN_GRID_SIZE} and ${MAX_GRID_SIZE}, got: ${gridWidth}`);
+  }
+  if (!Number.isFinite(gridHeight) || gridHeight < MIN_GRID_SIZE || gridHeight > MAX_GRID_SIZE) {
+    throw new Error(`Grid height must be between ${MIN_GRID_SIZE} and ${MAX_GRID_SIZE}, got: ${gridHeight}`);
+  }
+  
+  const validWidth = Math.floor(gridWidth);
+  const validHeight = Math.floor(gridHeight);
   const mask: EmojiMask = [];
   
   // Calculate the size of each cell in the source image
-  const cellWidth = imageData.width / gridWidth;
-  const cellHeight = imageData.height / gridHeight;
+  const cellWidth = imageData.width / validWidth;
+  const cellHeight = imageData.height / validHeight;
   
-  for (let gridY = 0; gridY < gridHeight; gridY++) {
+  for (let gridY = 0; gridY < validHeight; gridY++) {
     const row: boolean[] = [];
     
-    for (let gridX = 0; gridX < gridWidth; gridX++) {
+    for (let gridX = 0; gridX < validWidth; gridX++) {
       // Calculate the bounds of this cell in the source image
       const startX = Math.floor(gridX * cellWidth);
       const startY = Math.floor(gridY * cellHeight);
