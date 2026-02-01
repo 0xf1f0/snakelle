@@ -22,4 +22,8 @@ feature/<issue-number>-<short-description>
 - `feature/48-game-loop-canvas` for issue #48 "Implement core game loop and Canvas renderer for rectangular grid"
 - `feature/50-emoji-mask` for issue #50 "Implement emoji → mask conversion and EmojiMetadata"
 
+### Automated Enforcement
+
+Branch naming is automatically validated by the GitHub Actions workflow (`.github/workflows/branch-naming.yml`). Pull requests with non-compliant branch names will fail the check until the branch is renamed.
+
 **Important**: When you are assigned to work on an issue, create your branch following this exact pattern.
