@@ -6,6 +6,7 @@ import { appState, type AppState } from './app/AppState';
 import { createLandingScreen } from './screens/LandingScreen';
 import { createLevelSelectScreen } from './screens/LevelSelectScreen';
 import { createGameScreen } from './screens/GameScreen';
+import { createMaskDebugScreen } from './screens/MaskDebugScreen';
 
 export class App {
   private container: HTMLElement;
@@ -41,6 +42,9 @@ export class App {
         break;
       case 'game':
         screen = createGameScreen(state.selectedLevel);
+        break;
+      case 'maskDebug':
+        screen = createMaskDebugScreen();
         break;
       default:
         screen = createLandingScreen();
