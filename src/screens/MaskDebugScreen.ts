@@ -13,6 +13,20 @@ const DEFAULT_GRID_WIDTH = 16;
 const DEFAULT_GRID_HEIGHT = 24;
 
 /**
+ * Escapes HTML special characters to prevent XSS attacks
+ * @param unsafe - The string to escape
+ * @returns The escaped string safe for HTML insertion
+ */
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
  * Creates the mask debug screen component
  */
 export function createMaskDebugScreen(): HTMLElement {
@@ -71,6 +85,11 @@ export function createMaskDebugScreen(): HTMLElement {
     const { mask, emoji, name } = getCurrentMask();
     const cellCount = countMaskCells(mask);
     
+    // Escape user-provided and dynamic content to prevent XSS
+    const safeEmoji = escapeHtml(emoji);
+    const safeName = escapeHtml(name);
+    const safeCustomEmoji = escapeHtml(customEmoji);
+    
     container.innerHTML = `
       <div class="mask-debug-content">
         <div class="debug-header">
@@ -84,7 +103,7 @@ export function createMaskDebugScreen(): HTMLElement {
             <select id="level-select">
               ${LEVELS.map((level, i) => 
                 `<option value="${i}" ${i === currentLevelIndex && !isUsingCustomEmoji ? 'selected' : ''}>
-                  ${level.metadata.emoji} ${level.metadata.name}
+                  ${escapeHtml(level.metadata.emoji)} ${escapeHtml(level.metadata.name)}
                 </option>`
               ).join('')}
             </select>
@@ -94,16 +113,16 @@ export function createMaskDebugScreen(): HTMLElement {
             <label>Or test custom emoji:</label>
             <input type="text" id="emoji-input" 
                    placeholder="Paste emoji here" 
-                   value="${customEmoji}"
+                   value="${safeCustomEmoji}"
                    maxlength="4" />
             <button id="generate-button" class="primary-button">Generate</button>
           </div>
         </div>
         
         <div class="mask-info">
-          <div class="emoji-preview">${emoji}</div>
+          <div class="emoji-preview">${safeEmoji}</div>
           <div class="mask-stats">
-            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Name:</strong> ${safeName}</p>
             <p><strong>Grid Size:</strong> ${mask[0]?.length ?? 0} × ${mask.length}</p>
             <p><strong>Filled Cells:</strong> ${cellCount}</p>
             <p><strong>Fill Ratio:</strong> ${((cellCount / (mask.length * (mask[0]?.length ?? 1))) * 100).toFixed(1)}%</p>
@@ -130,7 +149,7 @@ export function createMaskDebugScreen(): HTMLElement {
    */
   function generateMaskCode(mask: EmojiMask, emoji: string): string {
     const rows = mask.map(row => {
-      const cells = row.map(cell => cell ? 'true ' : 'false').join(', ');
+      const cells = row.map(cell => (cell ? 'true' : 'false')).join(', ');
       return `  [${cells}],`;
     }).join('\n');
     
@@ -150,7 +169,7 @@ export function createMaskDebugScreen(): HTMLElement {
     // Level select dropdown
     const levelSelect = container.querySelector('#level-select') as HTMLSelectElement;
     levelSelect?.addEventListener('change', (e) => {
-      currentLevelIndex = parseInt((e.target as HTMLSelectElement).value);
+      currentLevelIndex = parseInt((e.target as HTMLSelectElement).value, 10);
       isUsingCustomEmoji = false;
       render();
     });
@@ -176,6 +195,12 @@ export function createMaskDebugScreen(): HTMLElement {
       const { mask, emoji } = getCurrentMask();
       const code = generateMaskCode(mask, emoji);
       codeOutput.textContent = code;
+      
+      // Check if clipboard API is available (requires secure context)
+      if (!navigator.clipboard) {
+        copyButton.textContent = 'Clipboard unavailable - see code below';
+        return;
+      }
       
       // Copy to clipboard
       navigator.clipboard.writeText(code).then(() => {
