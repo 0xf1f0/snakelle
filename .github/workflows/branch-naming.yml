@@ -1,6 +1,10 @@
 name: Branch Naming Convention
 
 on:
+  push:
+    branches-ignore:
+      - main
+      - master
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
