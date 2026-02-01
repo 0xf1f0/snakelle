@@ -33,6 +33,11 @@ export function createGameScreen(level?: number): HTMLElement {
     },
     draw: () => {
       renderer.render(gameState);
+      // Update visited count display during draw
+      const visitedCountElement = container.querySelector('#visited-count') as HTMLElement;
+      if (visitedCountElement) {
+        visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${gameState.level.width * gameState.level.height}`;
+      }
     }
   });
 
@@ -60,6 +65,11 @@ export function createGameScreen(level?: number): HTMLElement {
     const containerWidth = canvasContainer.clientWidth;
     const containerHeight = canvasContainer.clientHeight;
     
+    // Only resize if container has valid dimensions
+    if (containerWidth === 0 || containerHeight === 0) {
+      return;
+    }
+    
     // Calculate size to maintain aspect ratio based on board dimensions
     const boardAspectRatio = gameState.level.width / gameState.level.height;
     const containerAspectRatio = containerWidth / containerHeight;
@@ -82,8 +92,8 @@ export function createGameScreen(level?: number): HTMLElement {
     canvas.style.margin = '0 auto';
   }
 
-  // Initial resize - use setTimeout to ensure DOM is ready
-  setTimeout(resizeCanvas, 0);
+  // Initial resize - use requestAnimationFrame for proper DOM readiness
+  requestAnimationFrame(resizeCanvas);
   
   // Handle window resize
   window.addEventListener('resize', resizeCanvas);
@@ -96,23 +106,6 @@ export function createGameScreen(level?: number): HTMLElement {
     window.removeEventListener('resize', resizeCanvas);
     appState.setScreen('levelSelect');
   });
-
-  // Update visited count periodically
-  const visitedCountElement = container.querySelector('#visited-count') as HTMLElement;
-  const updateStats = setInterval(() => {
-    visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${gameState.level.width * gameState.level.height}`;
-  }, 100);
-
-  // Clean up on unmount
-  const cleanup = (): void => {
-    gameLoop.stop();
-    keyboardHandler.disable();
-    clearInterval(updateStats);
-    window.removeEventListener('resize', resizeCanvas);
-  };
-
-  // Store cleanup for potential future use
-  (container as HTMLElement & { cleanup?: () => void }).cleanup = cleanup;
 
   // Start the game
   keyboardHandler.enable();
