@@ -2,7 +2,7 @@
  * Main App component that manages screen rendering
  */
 
-import { appState, AppState } from './app/AppState';
+import { appState, type AppState } from './app/AppState';
 import { createLandingScreen } from './screens/LandingScreen';
 import { createLevelSelectScreen } from './screens/LevelSelectScreen';
 import { createGameScreen } from './screens/GameScreen';

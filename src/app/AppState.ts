@@ -25,7 +25,7 @@ class AppStateManager {
   setScreen(screen: ScreenType, selectedLevel?: number): void {
     this.state = {
       currentScreen: screen,
-      selectedLevel,
+      selectedLevel: selectedLevel ?? this.state.selectedLevel,
     };
     this.notifyListeners();
   }

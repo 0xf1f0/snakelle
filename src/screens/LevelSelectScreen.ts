@@ -26,7 +26,7 @@ export function createLevelSelectScreen(): HTMLElement {
   const levelButtons = container.querySelectorAll('.level-item');
   levelButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-      const level = parseInt((e.target as HTMLElement).getAttribute('data-level') || '1');
+      const level = parseInt((e.currentTarget as HTMLElement).getAttribute('data-level') || '1');
       appState.setScreen('game', level);
     });
   });
