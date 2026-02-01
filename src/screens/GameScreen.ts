@@ -3,10 +3,23 @@
  */
 
 import { appState } from '../app/AppState';
+import type { GameState, Direction, Position, Snake, GameStatus } from '../game/state';
 
 export function createGameScreen(level?: number): HTMLElement {
   const container = document.createElement('div');
   container.className = 'screen game-screen';
+
+  // Placeholder to demonstrate type usage - will be implemented in future issues
+  let _gameState: GameState | null = null;
+  const _direction: Direction = 'up';
+  const _position: Position = { x: 0, y: 0 };
+  const _snake: Snake = { segments: [_position], direction: _direction };
+  const _status: GameStatus = 'idle';
+
+  // Suppress unused variable warnings (temporary until game logic is implemented)
+  void _gameState;
+  void _snake;
+  void _status;
 
   container.innerHTML = `
     <div class="game-content">
