@@ -21,10 +21,29 @@ export function createGameScreen(level?: number): HTMLElement {
   const renderer = createBoardRenderer();
   const canvas = renderer.getCanvas();
 
+  // Restart function
+  function restartGame(): void {
+    gameState = createGameState();
+    // Restart game loop with fresh state
+    if (!gameLoop.isRunning()) {
+      gameLoop.start();
+    }
+  }
+
   // Create keyboard handler
   const keyboardHandler = createKeyboardHandler((direction) => {
     changeDirection(gameState, direction);
   });
+
+  // Add restart key handler
+  function handleRestartKey(event: KeyboardEvent): void {
+    if (event.key === 'r' || event.key === 'R') {
+      if (gameState.status === 'lost') {
+        event.preventDefault();
+        restartGame();
+      }
+    }
+  }
 
   // Create game loop
   const gameLoop = createGameLoop({
@@ -37,6 +56,16 @@ export function createGameScreen(level?: number): HTMLElement {
       const visitedCountElement = container.querySelector('#visited-count') as HTMLElement;
       if (visitedCountElement) {
         visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${gameState.level.width * gameState.level.height}`;
+      }
+      
+      // Show game over message if lost
+      const gameOverElement = container.querySelector('#game-over-message') as HTMLElement;
+      if (gameOverElement) {
+        if (gameState.status === 'lost') {
+          gameOverElement.style.display = 'block';
+        } else {
+          gameOverElement.style.display = 'none';
+        }
       }
     }
   });
@@ -51,6 +80,10 @@ export function createGameScreen(level?: number): HTMLElement {
         </div>
       </div>
       <div class="game-area" id="canvas-container">
+        <div id="game-over-message" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 8px; text-align: center; z-index: 10;">
+          <h2 style="margin: 0 0 10px 0;">Game Over!</h2>
+          <p style="margin: 0;">Press R to Restart</p>
+        </div>
       </div>
     </div>
   `;
@@ -104,11 +137,13 @@ export function createGameScreen(level?: number): HTMLElement {
     gameLoop.stop();
     keyboardHandler.disable();
     window.removeEventListener('resize', resizeCanvas);
+    window.removeEventListener('keydown', handleRestartKey);
     appState.setScreen('levelSelect');
   });
 
   // Start the game
   keyboardHandler.enable();
+  window.addEventListener('keydown', handleRestartKey);
   gameLoop.start();
 
   return container;

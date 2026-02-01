@@ -25,6 +25,16 @@ export function updateGameState(state: GameState): void {
     return;
   }
 
+  // Check self-collision (head hitting any existing segment)
+  const hitsOwnBody = state.snake.segments.some(
+    (segment) => segment.x === nextHead.x && segment.y === nextHead.y
+  );
+  
+  if (hitsOwnBody) {
+    state.status = 'lost';
+    return;
+  }
+
   // Move the snake: add new head
   state.snake.segments.unshift(nextHead);
 
