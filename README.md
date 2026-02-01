@@ -19,6 +19,15 @@ Build for production:
 npm run build
 ```
 
+## Contributing
+
+Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- Development workflow
+- Code standards
+- Branch naming conventions
+- Working with GitHub Copilot
+- Pull request process
+
 ## Branch Naming Convention
 
 When working on issues in this repository, please follow this branch naming convention:

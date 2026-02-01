@@ -1,0 +1,74 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Snakelle
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please provide details to help us understand your request.
+        
+        **Note:** Well-scoped issues work best with GitHub Copilot. See [Copilot Instructions](.github/copilot-instructions.md) for guidance.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What feature or enhancement would you like to see?
+      placeholder: Describe the feature you're requesting
+    validations:
+      required: true
+  
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What does "done" look like for this feature?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+  
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to Modify
+      description: Which files should be changed? (if known)
+      placeholder: |
+        - `src/screens/GameScreen.ts`
+        - `src/app/AppState.ts`
+    validations:
+      required: false
+  
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: How does this relate to existing code or game mechanics?
+      placeholder: Explain how this feature fits into the current codebase
+    validations:
+      required: false
+  
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing Requirements
+      description: How should this feature be tested?
+      placeholder: |
+        - Manual testing steps
+        - Expected behavior
+        - Edge cases to consider
+    validations:
+      required: false
+  
+  - type: checkboxes
+    id: copilot-suitable
+    attributes:
+      label: Copilot Suitability
+      description: Is this task well-suited for GitHub Copilot?
+      options:
+        - label: This is a well-scoped, isolated feature suitable for Copilot
+        - label: This task has clear acceptance criteria
+        - label: This task can be completed without major architectural changes
