@@ -43,6 +43,13 @@ export interface Level {
 // Constants for mask generation
 const DEFAULT_CANVAS_SIZE = 256; // High resolution for sampling
 const ALPHA_THRESHOLD = 128; // Alpha value threshold to consider a pixel as "filled"
+/**
+ * Threshold for determining if a grid cell is "filled" based on pixel coverage.
+ * A cell is considered filled if more than 30% of its pixels have alpha >= ALPHA_THRESHOLD.
+ * This value was chosen empirically to balance between capturing emoji details
+ * and avoiding noise from anti-aliasing artifacts at emoji edges.
+ */
+const CELL_FILL_THRESHOLD = 0.3;
 
 /**
  * Renders an emoji to an offscreen canvas and returns the ImageData
@@ -124,9 +131,9 @@ export function sampleToMask(
         }
       }
       
-      // Consider the cell as filled if more than 30% of its pixels are filled
+      // Consider the cell as filled if pixel coverage exceeds the threshold
       const fillRatio = totalCount > 0 ? filledCount / totalCount : 0;
-      row.push(fillRatio > 0.3);
+      row.push(fillRatio > CELL_FILL_THRESHOLD);
     }
     
     mask.push(row);
