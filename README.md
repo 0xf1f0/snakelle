@@ -1,5 +1,23 @@
-# snakelle
-Snakelle – Eat the emoji, one cell at a time. A browser-based Snake puzzle game played on emoji-shaped grids.
+# Snakelle
+
+Eat the emoji, one cell at a time.
+
+## Getting Started
+
+Install dependencies:
+```bash
+npm install
+```
+
+Start the development server:
+```bash
+npm run dev
+```
+
+Build for production:
+```bash
+npm run build
+```
 
 ## Branch Naming Convention
 
