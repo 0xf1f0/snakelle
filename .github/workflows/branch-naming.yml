@@ -1,6 +1,10 @@
 name: Branch Naming Convention
 
 on:
+  push:
+    branches-ignore:
+      - main
+      - master
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
@@ -10,7 +14,11 @@ jobs:
     steps:
       - name: Check branch name
         run: |
-          BRANCH_NAME="${{ github.head_ref }}"
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BRANCH_NAME="${{ github.head_ref }}"
+          else
+            BRANCH_NAME="${{ github.ref_name }}"
+          fi
           echo "Checking branch name: $BRANCH_NAME"
           
           # Check if branch name matches the pattern: feature/<number>-<2-4-words>
