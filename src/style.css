@@ -183,6 +183,28 @@ body {
   max-height: 100%;
 }
 
+.game-over-overlay {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 10;
+}
+
+.game-over-overlay h2 {
+  margin: 0 0 10px 0;
+}
+
+.game-over-overlay p {
+  margin: 0;
+}
+
 .placeholder-text {
   color: #888;
   font-size: 1.5em;

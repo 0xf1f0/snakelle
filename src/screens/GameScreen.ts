@@ -91,8 +91,8 @@ export function createGameScreen(level?: number): HTMLElement {
   // Add game over message overlay
   const gameOverMessage = document.createElement('div');
   gameOverMessage.id = 'game-over-message';
-  gameOverMessage.style.cssText = 'display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 8px; text-align: center; z-index: 10;';
-  gameOverMessage.innerHTML = '<h2 style="margin: 0 0 10px 0;">Game Over!</h2><p style="margin: 0;">Press R to Restart</p>';
+  gameOverMessage.className = 'game-over-overlay';
+  gameOverMessage.innerHTML = '<h2>Game Over!</h2><p>Press R to Restart</p>';
   canvasContainer.appendChild(gameOverMessage);
 
   // Set canvas size to maintain square aspect ratio
