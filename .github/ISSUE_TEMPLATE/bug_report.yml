@@ -1,0 +1,100 @@
+name: Bug Report
+description: Report a bug or issue in Snakelle
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please provide details to help us reproduce and fix the issue.
+        
+        **Note:** Well-scoped issues work best with GitHub Copilot. See [Copilot Instructions](.github/copilot-instructions.md) for guidance.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What's wrong?
+      placeholder: Describe the bug clearly and concisely
+    validations:
+      required: true
+  
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this bug?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen?
+      placeholder: Describe what you expected to happen
+    validations:
+      required: true
+  
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+      placeholder: Describe what actually happens
+    validations:
+      required: true
+  
+  - type: textarea
+    id: files
+    attributes:
+      label: Affected Files
+      description: Which files are likely involved? (if known)
+      placeholder: |
+        - `src/game/Snake.ts`
+        - `src/screens/GameScreen.ts`
+    validations:
+      required: false
+  
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add screenshots if applicable
+      placeholder: Paste or drag screenshots here
+    validations:
+      required: false
+  
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, or other relevant details
+      placeholder: |
+        - Browser: Chrome 120
+        - OS: macOS 14
+    validations:
+      required: false
+  
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information about the problem
+      placeholder: Add any other context about the problem here
+    validations:
+      required: false
+  
+  - type: checkboxes
+    id: copilot-suitable
+    attributes:
+      label: Copilot Suitability
+      description: Can this bug be fixed by GitHub Copilot?
+      options:
+        - label: This bug has clear reproduction steps
+        - label: The fix is likely localized to specific files
+        - label: This doesn't require deep understanding of game design decisions
