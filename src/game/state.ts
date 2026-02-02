@@ -94,6 +94,18 @@ export function createGameState(
     { x: startX - 4, y: startY },  // tail
   ];
   
+  // Validate initial snake position against mask if mask exists
+  if (mask) {
+    for (const segment of initialSegments) {
+      if (segment.y >= 0 && segment.y < height && segment.x >= 0 && segment.x < width) {
+        if (!mask[segment.y][segment.x]) {
+          // Initial position is outside mask - this is a bug in level design
+          console.warn(`Snake segment at (${segment.x}, ${segment.y}) is outside mask`);
+        }
+      }
+    }
+  }
+  
   // Mark all starting positions as visited
   let visitedCount = 0;
   for (const segment of initialSegments) {
