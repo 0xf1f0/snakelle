@@ -119,6 +119,20 @@ export function createBoardRenderer(): BoardRenderer {
     renderContext.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
   }
 
+  /**
+   * Draws win message
+   */
+  function drawWin(): void {
+    renderContext.fillStyle = 'rgba(0, 100, 0, 0.3)';
+    renderContext.fillRect(0, 0, canvas.width, canvas.height);
+
+    renderContext.fillStyle = '#4CAF50';
+    renderContext.font = 'bold 48px system-ui';
+    renderContext.textAlign = 'center';
+    renderContext.textBaseline = 'middle';
+    renderContext.fillText('YOU WON! 🎉', canvas.width / 2, canvas.height / 2);
+  }
+
   return {
     render(state: GameState): void {
       calculateCellSize(state);
@@ -129,6 +143,8 @@ export function createBoardRenderer(): BoardRenderer {
 
       if (state.status === 'lost') {
         drawGameOver();
+      } else if (state.status === 'won') {
+        drawWin();
       }
     },
 

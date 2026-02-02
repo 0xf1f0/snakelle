@@ -207,3 +207,83 @@ describe('changeDirection', () => {
     expect(state.snake.direction).toBe('right');
   });
 });
+
+describe('updateGameState with emoji mask', () => {
+  it('should detect collision with mask boundary', () => {
+    const mask = [
+      [false, false, false, false, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, false, false, false, false]
+    ];
+    const level = { width: 5, height: 5, mask, targetCells: 9 };
+    const state = createGameState(level);
+    
+    // Place snake near mask boundary
+    state.snake.segments = [{ x: 1, y: 1 }];
+    state.snake.direction = 'left'; // Moving left would hit a false cell
+    
+    updateGameState(state);
+    
+    expect(state.status).toBe('lost');
+  });
+
+  it('should allow movement within mask area', () => {
+    const mask = [
+      [false, false, false, false, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, false, false, false, false]
+    ];
+    const level = { width: 5, height: 5, mask, targetCells: 9 };
+    const state = createGameState(level);
+    
+    // Place snake in center of mask area
+    state.snake.segments = [{ x: 2, y: 2 }];
+    state.snake.direction = 'right'; // Moving right stays in mask
+    
+    const initialStatus = state.status;
+    updateGameState(state);
+    
+    expect(state.status).toBe(initialStatus); // Should still be playing
+    expect(state.snake.segments[0]).toEqual({ x: 3, y: 2 });
+  });
+
+  it('should set status to won when all traversible cells are visited', () => {
+    // Create a very small mask
+    const mask = [
+      [true, true],
+      [true, true]
+    ];
+    const level = { width: 2, height: 2, mask, targetCells: 4 };
+    const state = createGameState(level);
+    
+    // Start with 1 cell visited
+    state.snake.segments = [{ x: 0, y: 0 }];
+    state.visited = [
+      [true, false],
+      [false, false]
+    ];
+    state.visitedCount = 1;
+    state.snake.direction = 'right';
+    
+    // Move right: visit (1, 0)
+    updateGameState(state);
+    expect(state.visitedCount).toBe(2);
+    expect(state.status).toBe('playing');
+    
+    // Move down: visit (1, 1)
+    state.snake.direction = 'down';
+    updateGameState(state);
+    expect(state.visitedCount).toBe(3);
+    expect(state.status).toBe('playing');
+    
+    // Move left: visit (0, 1) - this should trigger win
+    state.snake.direction = 'left';
+    updateGameState(state);
+    expect(state.visitedCount).toBe(4);
+    expect(state.status).toBe('won');
+  });
+});
