@@ -25,9 +25,10 @@ export interface EmojiMetadata {
 }
 
 /**
- * A complete level definition with emoji and its mask
+ * A complete level definition with emoji and its mask.
+ * Named EmojiLevel to distinguish from the basic Level interface in src/game/state.ts
  */
-export interface Level {
+export interface EmojiLevel {
   /** Width of the level grid */
   width: number;
   /** Height of the level grid */
@@ -200,19 +201,19 @@ export function countMaskCells(mask: EmojiMask): number {
 }
 
 /**
- * Creates a Level from emoji metadata and dimensions
+ * Creates an EmojiLevel from emoji metadata and dimensions
  * @param metadata - The emoji metadata
  * @param width - Grid width
  * @param height - Grid height
  * @param mask - The pre-generated mask (or will be generated if not provided)
- * @returns A complete Level object
+ * @returns A complete EmojiLevel object
  */
-export function createLevel(
+export function createEmojiLevel(
   metadata: EmojiMetadata,
   width: number,
   height: number,
   mask?: EmojiMask
-): Level {
+): EmojiLevel {
   const generatedMask = mask ?? generateEmojiMask(metadata.emoji, width, height);
   
   return {

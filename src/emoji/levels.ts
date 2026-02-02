@@ -3,7 +3,7 @@
  * Contains hardcoded emoji masks for consistent gameplay
  */
 
-import type { EmojiMetadata, EmojiMask, Level } from './mask';
+import type { EmojiMetadata, EmojiMask, EmojiLevel } from './mask';
 import { countMaskCells } from './mask';
 
 /**
@@ -53,9 +53,9 @@ const APPLE_METADATA: EmojiMetadata = {
 };
 
 /**
- * Predefined Level 1: Apple
+ * Predefined EmojiLevel 1: Apple
  */
-export const LEVEL_APPLE: Level = {
+export const LEVEL_APPLE: EmojiLevel = {
   width: 16,
   height: 24,
   metadata: APPLE_METADATA,
@@ -66,16 +66,16 @@ export const LEVEL_APPLE: Level = {
 /**
  * All available levels
  */
-export const LEVELS: Level[] = [
+export const LEVELS: EmojiLevel[] = [
   LEVEL_APPLE,
 ];
 
 /**
  * Gets a level by its 1-based level number
  * @param levelNumber - 1-based level number (e.g., 1 for the first level)
- * @returns The Level or undefined if the level number is out of range
+ * @returns The EmojiLevel or undefined if the level number is out of range
  */
-export function getLevel(levelNumber: number): Level | undefined {
+export function getLevel(levelNumber: number): EmojiLevel | undefined {
   return LEVELS[levelNumber - 1];
 }
 

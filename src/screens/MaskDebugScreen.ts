@@ -95,6 +95,10 @@ export function createMaskDebugScreen(): HTMLElement {
     const safeName = escapeHtml(name);
     const safeCustomEmoji = escapeHtml(customEmoji);
     
+    // Calculate fill ratio defensively to avoid division by zero
+    const totalCells = mask.length * (mask[0]?.length ?? 0);
+    const fillRatio = totalCells > 0 ? ((cellCount / totalCells) * 100).toFixed(1) : '0.0';
+    
     container.innerHTML = `
       <div class="mask-debug-content">
         <div class="debug-header">
@@ -130,7 +134,7 @@ export function createMaskDebugScreen(): HTMLElement {
             <p><strong>Name:</strong> ${safeName}</p>
             <p><strong>Grid Size:</strong> ${mask[0]?.length ?? 0} × ${mask.length}</p>
             <p><strong>Filled Cells:</strong> ${cellCount}</p>
-            <p><strong>Fill Ratio:</strong> ${((cellCount / (mask.length * (mask[0]?.length ?? 1))) * 100).toFixed(1)}%</p>
+            <p><strong>Fill Ratio:</strong> ${fillRatio}%</p>
           </div>
         </div>
         
