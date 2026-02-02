@@ -30,21 +30,23 @@ Comprehensive instructions for GitHub Copilot coding agents including:
 **Workflow:** `.github/workflows/branch-naming.yml`
 **Documentation:** `docs/BRANCH_NAMING.md`
 
-Required format: `feature/<issue-number>-<short-description>`
+Required format: `feature/<issue-number>-<short-description>` or `copilot/<issue-number>-<short-description>`
 
 **Enforcement:**
 - Automated GitHub Actions workflow validates all pull requests
 - Runs on: push to non-main branches, PR opened/edited/synchronized/reopened
-- Validates format using regex: `^feature/[0-9]+-[a-z]+(-[a-z]+){1,3}$`
+- Validates format using regex: `^(feature|copilot)/[0-9]+-[a-z]+(-[a-z]+){1,3}$`
 - Validates word count (2-4 words in description)
 - Provides detailed error messages with examples
 
 **Examples:**
 - ✅ `feature/1-init-vite-ts`
 - ✅ `feature/48-game-loop-canvas`
-- ✅ `feature/50-emoji-mask`
-- ❌ `copilot/setup-copilot-instructions` (wrong prefix)
+- ✅ `copilot/50-emoji-mask`
+- ✅ `copilot/60-setup-instructions`
+- ❌ `bugfix/setup-instructions` (wrong prefix)
 - ❌ `feature/init-app` (missing issue number)
+- ❌ `copilot/create-app` (missing issue number)
 - ❌ `feature/1-Init-App` (not lowercase)
 
 ### 3. Contributing Guidelines

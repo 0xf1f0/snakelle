@@ -9,10 +9,16 @@ This project enforces a strict branch naming convention to maintain consistency 
 ```
 feature/<issue-number>-<short-description>
 ```
+or
+```
+copilot/<issue-number>-<short-description>
+```
 
 ### Components
 
-1. **Prefix**: Always `feature/`
+1. **Prefix**: Either `feature/` or `copilot/`
+   - Use `feature/` for human-created branches
+   - Use `copilot/` for AI-generated branches
 2. **Issue Number**: The GitHub issue number this branch addresses
 3. **Short Description**: 2-4 words describing the change
    - Must be lowercase
@@ -26,15 +32,17 @@ feature/<issue-number>-<short-description>
 ```
 feature/1-init-vite-ts
 feature/48-game-loop-canvas
-feature/50-emoji-mask
+copilot/50-emoji-mask
+copilot/60-setup-instructions
 feature/100-add-user-auth
 ```
 
 ### ❌ Invalid Branch Names
 
 ```
-copilot/create-basic-app-shell    # Wrong prefix
+bugfix/create-basic-app-shell      # Wrong prefix (use feature/ or copilot/)
 feature/init-app                   # Missing issue number
+copilot/create-app                 # Missing issue number
 feature/1-Init-App                 # Not lowercase
 feature/1-single                   # Only 1 word (need 2-4)
 feature/1-this-is-too-many-words   # Too many words (need 2-4)
@@ -55,7 +63,7 @@ The `.github/workflows/branch-naming.yml` workflow automatically validates all p
 
 **Validation Steps:**
 1. Extract branch name from pull request
-2. Check against regex pattern: `^feature/[0-9]+-[a-z]+(-[a-z]+){1,3}$`
+2. Check against regex pattern: `^(feature|copilot)/[0-9]+-[a-z]+(-[a-z]+){1,3}$`
 3. Validate word count in description (2-4 words)
 4. Report success or detailed error message
 

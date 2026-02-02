@@ -11,9 +11,15 @@ If you need to create a branch, it **MUST** follow this exact naming convention:
 ```
 feature/<issue-number>-<short-description>
 ```
+or
+```
+copilot/<issue-number>-<short-description>
+```
 
 ### Mandatory Rules:
-1. **Prefix:** MUST be `feature/`
+1. **Prefix:** MUST be either `feature/` or `copilot/`
+   - Use `copilot/` for AI agent-created branches
+   - Use `feature/` for human-created branches
 2. **Issue number:** MUST include the GitHub issue number after the prefix
 3. **Separator:** MUST use a hyphen after the issue number
 4. **Description:** MUST be:
@@ -24,12 +30,13 @@ feature/<issue-number>-<short-description>
 ### ✅ Valid Examples:
 - `feature/1-init-vite-ts`
 - `feature/48-game-loop-canvas`
-- `feature/50-emoji-mask`
-- `feature/60-setup-copilot-instructions`
+- `copilot/50-emoji-mask`
+- `copilot/60-setup-instructions`
 
 ### ❌ Invalid Examples (will fail CI):
-- `copilot/create-basic-app-shell` ❌ Wrong prefix
+- `bugfix/create-basic-app-shell` ❌ Wrong prefix
 - `feature/init-app` ❌ Missing issue number
+- `copilot/create-app` ❌ Missing issue number
 - `feature/1-Init-App` ❌ Not lowercase
 - `feature/1-this-is-way-too-many-words` ❌ Too many words
 - `feature/1-app` ❌ Only 1 word
