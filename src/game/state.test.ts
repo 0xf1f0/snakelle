@@ -6,6 +6,7 @@ import { describe, it, expect } from 'vitest';
 import {
   createGameState,
   isPositionInBounds,
+  isPositionTraversible,
   getNextPosition,
   DEFAULT_BOARD_WIDTH,
   DEFAULT_BOARD_HEIGHT,
@@ -161,5 +162,84 @@ describe('getNextPosition', () => {
     getNextPosition(pos, 'up');
     
     expect(pos).toEqual(originalPos);
+  });
+});
+
+describe('isPositionTraversible', () => {
+  it('should return true for position within bounds when no mask', () => {
+    const level: Level = { width: 10, height: 10 };
+    const pos: Position = { x: 5, y: 5 };
+    
+    expect(isPositionTraversible(pos, level)).toBe(true);
+  });
+
+  it('should return false for position out of bounds when no mask', () => {
+    const level: Level = { width: 10, height: 10 };
+    const pos: Position = { x: 15, y: 5 };
+    
+    expect(isPositionTraversible(pos, level)).toBe(false);
+  });
+
+  it('should return true for traversable cell with mask', () => {
+    const mask = [
+      [true, true, false],
+      [true, true, false],
+      [false, false, false]
+    ];
+    const level: Level = { width: 3, height: 3, mask, targetCells: 4 };
+    const pos: Position = { x: 1, y: 1 };
+    
+    expect(isPositionTraversible(pos, level)).toBe(true);
+  });
+
+  it('should return false for non-traversable cell with mask', () => {
+    const mask = [
+      [true, true, false],
+      [true, true, false],
+      [false, false, false]
+    ];
+    const level: Level = { width: 3, height: 3, mask, targetCells: 4 };
+    const pos: Position = { x: 2, y: 0 };
+    
+    expect(isPositionTraversible(pos, level)).toBe(false);
+  });
+});
+
+describe('createGameState with mask', () => {
+  it('should create game state with mask level', () => {
+    const mask = [
+      [true, true, true, true, true],
+      [true, true, true, true, true],
+      [true, true, true, true, true],
+      [true, true, true, true, true],
+      [true, true, true, true, true]
+    ];
+    const level: Level = { width: 5, height: 5, mask, targetCells: 25 };
+    const state = createGameState(level);
+    
+    expect(state.level.width).toBe(5);
+    expect(state.level.height).toBe(5);
+    expect(state.level.mask).toBe(mask);
+    expect(state.level.targetCells).toBe(25);
+  });
+
+  it('should only mark traversable cells as visited', () => {
+    const mask = [
+      [false, false, false, false, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, true, true, true, false],
+      [false, false, false, false, false]
+    ];
+    const level: Level = { width: 5, height: 5, mask, targetCells: 9 };
+    const state = createGameState(level);
+    
+    // Starting position should be in the center (2, 2) which is traversable
+    // All initial snake segments should be marked as visited
+    for (const segment of state.snake.segments) {
+      if (mask[segment.y] && mask[segment.y][segment.x]) {
+        expect(state.visited[segment.y][segment.x]).toBe(true);
+      }
+    }
   });
 });
