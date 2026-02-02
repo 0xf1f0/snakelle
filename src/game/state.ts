@@ -34,9 +34,9 @@ export type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 export interface Level {
   width: number;
   height: number;
-  /** Optional emoji mask - true = traversible, false = wall */
+  /** Optional emoji mask - true = traversable, false = wall */
   mask?: boolean[][];
-  /** Total number of traversible cells (for win condition) */
+  /** Total number of traversable cells (for win condition) */
   targetCells?: number;
 }
 
@@ -85,15 +85,9 @@ export function createGameState(
   const startY = Math.floor(boardHeight / 2);
 
   // Initialize visited grid
-  // If mask is provided, only initialize cells where mask is true
-  const visited: boolean[][] = Array.from({ length: boardHeight }, (_, y) =>
-    Array.from({ length: width }, (_, x) => {
-      // If there's a mask and this cell is false, don't track it as visited
-      if (mask && !mask[y][x]) {
-        return false;
-      }
-      return false;
-    })
+  // All cells start as not visited (false)
+  const visited: boolean[][] = Array.from({ length: boardHeight }, () =>
+    Array.from({ length: width }, () => false)
   );
   
   // Create initial snake segments (length 5, heading right)
@@ -105,10 +99,10 @@ export function createGameState(
     { x: startX - 4, y: startY },  // tail
   ];
   
-  // Mark all starting positions as visited (only if they're traversible)
+  // Mark all starting positions as visited (only if they're traversable)
   let visitedCount = 0;
   for (const segment of initialSegments) {
-    // Only mark as visited if within bounds and traversible
+    // Only mark as visited if within bounds and traversable
     if (segment.y >= 0 && segment.y < boardHeight && 
         segment.x >= 0 && segment.x < width) {
       // Check mask if it exists
@@ -142,7 +136,7 @@ export function isPositionInBounds(pos: Position, level: Level): boolean {
 }
 
 /**
- * Checks if a position is traversible (within bounds and not blocked by mask)
+ * Checks if a position is traversable (within bounds and not blocked by mask)
  */
 export function isPositionTraversible(pos: Position, level: Level): boolean {
   // First check if in bounds
@@ -150,12 +144,12 @@ export function isPositionTraversible(pos: Position, level: Level): boolean {
     return false;
   }
   
-  // If there's a mask, check if this cell is traversible
+  // If there's a mask, check if this cell is traversable
   if (level.mask) {
     return level.mask[pos.y][pos.x];
   }
   
-  // No mask means all cells are traversible
+  // No mask means all cells are traversable
   return true;
 }
 

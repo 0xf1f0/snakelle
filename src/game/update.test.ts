@@ -251,7 +251,7 @@ describe('updateGameState with emoji mask', () => {
     expect(state.snake.segments[0]).toEqual({ x: 3, y: 2 });
   });
 
-  it('should set status to won when all traversible cells are visited', () => {
+  it('should set status to won when all traversable cells are visited', () => {
     // Create a very small mask
     const mask = [
       [true, true],

@@ -44,7 +44,7 @@ export function updateGameState(state: GameState): void {
     state.visitedCount++;
   }
 
-  // Check win condition: if all traversible cells are visited
+  // Check win condition: if all traversable cells are visited
   if (state.level.targetCells !== undefined && state.visitedCount >= state.level.targetCells) {
     state.status = 'won';
   }
