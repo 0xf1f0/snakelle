@@ -13,12 +13,18 @@ export function createLandingScreen(): HTMLElement {
       <h1 class="game-title">Snakelle</h1>
       <p class="game-tagline">Eat the emoji, one cell at a time.</p>
       <button id="play-button" class="primary-button">Play</button>
+      <button id="debug-button" class="secondary-button debug-link">🔧 Mask Debug</button>
     </div>
   `;
 
   const playButton = container.querySelector('#play-button') as HTMLButtonElement;
   playButton.addEventListener('click', () => {
     appState.setScreen('levelSelect');
+  });
+
+  const debugButton = container.querySelector('#debug-button') as HTMLButtonElement;
+  debugButton.addEventListener('click', () => {
+    appState.setScreen('maskDebug');
   });
 
   return container;

@@ -2,7 +2,7 @@
  * App state management for Snakelle
  */
 
-export type ScreenType = 'landing' | 'levelSelect' | 'game';
+export type ScreenType = 'landing' | 'levelSelect' | 'game' | 'maskDebug';
 
 export interface AppState {
   currentScreen: ScreenType;
