@@ -10,7 +10,7 @@ describe('updateGameState', () => {
   let state: GameState;
 
   beforeEach(() => {
-    state = createGameState(10, 10);
+    state = createGameState({ width: 10, height: 10 });
   });
 
   it('should move snake forward in current direction', () => {

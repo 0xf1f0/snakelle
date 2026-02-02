@@ -34,6 +34,10 @@ export type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 export interface Level {
   width: number;
   height: number;
+  /** Optional emoji mask - true = traversible, false = wall */
+  mask?: boolean[][];
+  /** Optional target cell count for win condition */
+  targetCells?: number;
 }
 
 /**
@@ -59,15 +63,19 @@ export const DEFAULT_BOARD_WIDTH = 16;
 export const DEFAULT_BOARD_HEIGHT = 24;
 
 /**
- * Creates initial game state with a simple rectangular board
- * @param width - Board width (default: 16)
- * @param height - Board height (default: 24)
+ * Creates initial game state
+ * @param level - Level configuration (width, height, optional mask and targetCells)
  * @returns Initial game state
  */
 export function createGameState(
-  width: number = DEFAULT_BOARD_WIDTH,
-  height: number = DEFAULT_BOARD_HEIGHT
+  level?: Level
 ): GameState {
+  // Use provided level or default dimensions
+  const width = level?.width ?? DEFAULT_BOARD_WIDTH;
+  const height = level?.height ?? DEFAULT_BOARD_HEIGHT;
+  const mask = level?.mask;
+  const targetCells = level?.targetCells;
+
   // Start the snake at the center of the board with length 5 for easier self-collision testing
   const startX = Math.floor(width / 2);
   const startY = Math.floor(height / 2);
@@ -86,6 +94,18 @@ export function createGameState(
     { x: startX - 4, y: startY },  // tail
   ];
   
+  // Validate initial snake position against mask if mask exists
+  if (mask) {
+    for (const segment of initialSegments) {
+      if (segment.y >= 0 && segment.y < height && segment.x >= 0 && segment.x < width) {
+        if (!mask[segment.y][segment.x]) {
+          // Initial position is outside mask - this is a bug in level design
+          console.warn(`Snake segment at (${segment.x}, ${segment.y}) is outside mask`);
+        }
+      }
+    }
+  }
+  
   // Mark all starting positions as visited
   let visitedCount = 0;
   for (const segment of initialSegments) {
@@ -99,6 +119,8 @@ export function createGameState(
     level: {
       width,
       height,
+      mask,
+      targetCells,
     },
     snake: {
       segments: initialSegments,
@@ -116,6 +138,27 @@ export function createGameState(
  */
 export function isPositionInBounds(pos: Position, level: Level): boolean {
   return pos.x >= 0 && pos.x < level.width && pos.y >= 0 && pos.y < level.height;
+}
+
+/**
+ * Checks if a position is on a traversible cell (within mask if mask exists)
+ * @param pos - Position to check
+ * @param level - Level with optional mask
+ * @returns true if position is traversible, false otherwise
+ */
+export function isPositionTraversible(pos: Position, level: Level): boolean {
+  // First check if position is within bounds
+  if (!isPositionInBounds(pos, level)) {
+    return false;
+  }
+  
+  // If no mask, all in-bounds positions are traversible
+  if (!level.mask) {
+    return true;
+  }
+  
+  // Check if position is on a true cell in the mask
+  return level.mask[pos.y][pos.x] === true;
 }
 
 /**

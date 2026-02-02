@@ -3,7 +3,7 @@
  */
 
 import type { GameState, Direction } from './state';
-import { getNextPosition, isPositionInBounds } from './state';
+import { getNextPosition, isPositionTraversible } from './state';
 
 /**
  * Updates the game state for one tick
@@ -19,8 +19,9 @@ export function updateGameState(state: GameState): void {
   const head = state.snake.segments[0];
   const nextHead = getNextPosition(head, state.snake.direction);
 
-  // Check collision with board edges
-  if (!isPositionInBounds(nextHead, state.level)) {
+  // Check collision with board edges or mask boundaries
+  // If mask exists, treat non-traversible cells as walls
+  if (!isPositionTraversible(nextHead, state.level)) {
     state.status = 'lost';
     return;
   }
@@ -47,6 +48,11 @@ export function updateGameState(state: GameState): void {
   // Keep the snake at constant length by removing the tail
   // (In future, we might grow the snake based on game mechanics like eating food)
   state.snake.segments.pop();
+
+  // Check win condition: if targetCells is defined and all cells are visited
+  if (state.level.targetCells !== undefined && state.visitedCount >= state.level.targetCells) {
+    state.status = 'won';
+  }
 }
 
 /**

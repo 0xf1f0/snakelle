@@ -9,13 +9,19 @@ import { updateGameState, changeDirection } from '../game/update';
 import { createGameLoop } from '../game/loop';
 import { createBoardRenderer } from '../render/board';
 import { createKeyboardHandler } from '../input/keyboard';
+import { getLevel } from '../emoji/levels';
+import type { EmojiLevel } from '../emoji/mask';
 
 export function createGameScreen(level?: number): HTMLElement {
   const container = document.createElement('div');
   container.className = 'screen game-screen';
 
-  // Create game state
-  let gameState: GameState = createGameState();
+  // Load the emoji level (defaults to level 1 if not specified)
+  const levelNumber = level ?? 1;
+  const emojiLevel: EmojiLevel | undefined = getLevel(levelNumber);
+  
+  // Create game state using the emoji level
+  let gameState: GameState = createGameState(emojiLevel);
   
   // Create renderer
   const renderer = createBoardRenderer();
@@ -23,7 +29,7 @@ export function createGameScreen(level?: number): HTMLElement {
 
   // Restart function
   function restartGame(): void {
-    gameState = createGameState();
+    gameState = createGameState(emojiLevel);
     // Restart game loop with fresh state
     if (!gameLoop.isRunning()) {
       gameLoop.start();
@@ -38,7 +44,7 @@ export function createGameScreen(level?: number): HTMLElement {
   // Add restart key handler
   function handleRestartKey(event: KeyboardEvent): void {
     if (event.key === 'r' || event.key === 'R') {
-      if (gameState.status === 'lost') {
+      if (gameState.status === 'lost' || gameState.status === 'won') {
         event.preventDefault();
         restartGame();
       }
@@ -55,7 +61,8 @@ export function createGameScreen(level?: number): HTMLElement {
       // Update visited count display during draw
       const visitedCountElement = container.querySelector('#visited-count') as HTMLElement;
       if (visitedCountElement) {
-        visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${gameState.level.width * gameState.level.height}`;
+        const totalCells = gameState.level.targetCells ?? (gameState.level.width * gameState.level.height);
+        visitedCountElement.textContent = `Visited: ${gameState.visitedCount}/${totalCells}`;
       }
       
       // Show game over message if lost
@@ -65,6 +72,16 @@ export function createGameScreen(level?: number): HTMLElement {
           gameOverElement.style.display = 'block';
         } else {
           gameOverElement.style.display = 'none';
+        }
+      }
+      
+      // Show win message if won
+      const winMessageElement = container.querySelector('#win-message') as HTMLElement;
+      if (winMessageElement) {
+        if (gameState.status === 'won') {
+          winMessageElement.style.display = 'block';
+        } else {
+          winMessageElement.style.display = 'none';
         }
       }
     }
@@ -94,6 +111,14 @@ export function createGameScreen(level?: number): HTMLElement {
   gameOverMessage.className = 'game-over-overlay';
   gameOverMessage.innerHTML = '<h2>Game Over!</h2><p>Press R to Restart</p>';
   canvasContainer.appendChild(gameOverMessage);
+  
+  // Add win message overlay
+  const winMessage = document.createElement('div');
+  winMessage.id = 'win-message';
+  winMessage.className = 'game-over-overlay';
+  winMessage.innerHTML = '<h2>You Win! 🎉</h2><p>Press R to Restart</p>';
+  winMessage.style.backgroundColor = 'rgba(0, 255, 0, 0.8)';
+  canvasContainer.appendChild(winMessage);
 
   // Set canvas size to maintain square aspect ratio
   function resizeCanvas(): void {
