@@ -70,21 +70,32 @@ error TS2688: Cannot find type definition file for 'vite/client'
 ```
 
 ### Required Before Each Commit
+- Run `npm test` to ensure all unit tests pass
 - Run `npm run build` to ensure TypeScript compilation succeeds without errors
 - Verify no TypeScript errors appear in the output
 - The project must compile cleanly with zero type errors
+- All tests must pass before committing
 
 ### Development Flow
 - **Install:** `npm install` (MUST run this first before any other commands)
 - **Dev server:** `npm run dev` (Vite dev server for hot module reloading)
 - **Build:** `npm run build` (TypeScript compilation + Vite bundling)
 - **Preview:** `npm run preview` (preview production build)
+- **Test:** `npm test` (run all unit tests)
+- **Test (watch):** `npm run test:watch` (run tests in watch mode during development)
 
 ### Testing and Linting
-- **No linting tools:** This project does not use ESLint, Prettier, or other linters
-- **No test framework:** There are no unit tests or test runners configured (Jest, Vitest, etc.)
-- **Type checking only:** TypeScript strict mode (`tsc`) is the only automated validation
+- **Test framework:** Vitest is configured for unit testing
+- **Test commands:**
+  - `npm test` - Run all tests once
+  - `npm run test:watch` - Run tests in watch mode
+  - `npm run test:ui` - Run tests with UI
+  - `npm run test:coverage` - Run tests with coverage report
+- **Test environment:** happy-dom (lightweight DOM implementation)
+- **Test files:** Place test files next to source files with `.test.ts` extension
+- **Type checking:** TypeScript strict mode (`tsc`) for type validation
 - **Manual testing:** Verify changes by running `npm run dev` and testing in the browser
+- **CI/CD:** Tests run automatically on all pull requests via GitHub Actions
 
 ## Repository Structure
 
@@ -150,6 +161,7 @@ Copilot works well on these types of tasks:
 - Adding or updating documentation
 - Refactoring isolated modules
 - Updating CSS and styling
+- Writing unit tests for new features
 
 ❌ **Not Recommended (do yourself or review closely):**
 - Major architectural changes or refactoring across multiple modules
@@ -158,6 +170,53 @@ Copilot works well on these types of tasks:
 - Introducing new external dependencies
 - Production-critical changes without thorough testing
 - Tasks requiring deep understanding of game design decisions
+
+## Writing Tests
+
+### Test Framework
+The project uses **Vitest** as the testing framework with **happy-dom** for DOM emulation.
+
+### Test File Organization
+- Place test files next to the source files they test
+- Use `.test.ts` extension (e.g., `state.test.ts` for `state.ts`)
+- Group related tests using `describe()` blocks
+- Use descriptive test names that explain what is being tested
+
+### Test Structure Example
+```typescript
+import { describe, it, expect } from 'vitest';
+import { functionToTest } from './module';
+
+describe('functionToTest', () => {
+  it('should do something specific', () => {
+    const result = functionToTest(input);
+    expect(result).toBe(expectedValue);
+  });
+});
+```
+
+### What to Test
+1. **Pure functions** - Test all edge cases, input validation, and return values
+2. **State management** - Test state changes, observers, and subscriptions
+3. **Game logic** - Test movement, collisions, win/lose conditions
+4. **Utility functions** - Test calculations, conversions, and data transformations
+
+### What NOT to Test (or Skip)
+- DOM rendering (Canvas 2D context is not fully supported in happy-dom)
+- Visual appearance or layout
+- Browser-specific APIs that aren't available in test environment
+- Complex UI interactions requiring a real browser
+
+### Running Tests
+- `npm test` - Run all tests once (use before commits)
+- `npm run test:watch` - Run tests in watch mode during development
+- `npm run test:ui` - Open Vitest UI for interactive testing
+- Tests run automatically on CI for all pull requests
+
+### Test Coverage
+- Aim for high coverage of core game logic and utilities
+- Focus on testing business logic rather than presentation code
+- Use `npm run test:coverage` to see coverage reports
 
 ## Guidelines for Issues
 
@@ -309,6 +368,11 @@ When adding new dependencies:
 ### Current Dependencies
 - **vite** `^7.2.4` - Build tool and dev server
 - **typescript** `~5.9.3` - Type checking and compilation
+
+### Current Dev Dependencies (Testing)
+- **vitest** `2.1.8` - Test framework
+- **@vitest/ui** `2.1.8` - Vitest UI for interactive test running
+- **happy-dom** `15.11.7` - Lightweight DOM implementation for testing
 
 **Note:** This is a minimal dependency project. Avoid adding new dependencies unless absolutely necessary.
 
