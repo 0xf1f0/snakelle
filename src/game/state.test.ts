@@ -27,7 +27,7 @@ describe('createGameState', () => {
   it('should create initial game state with custom dimensions', () => {
     const width = 20;
     const height = 30;
-    const state = createGameState(width, height);
+    const state = createGameState({ width, height });
     
     expect(state.level.width).toBe(width);
     expect(state.level.height).toBe(height);
@@ -79,7 +79,7 @@ describe('createGameState', () => {
   it('should initialize visited grid with correct dimensions', () => {
     const width = 10;
     const height = 15;
-    const state = createGameState(width, height);
+    const state = createGameState({ width, height });
     
     expect(state.visited).toHaveLength(height);
     expect(state.visited[0]).toHaveLength(width);
